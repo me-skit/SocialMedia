@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SocialMedia.Core.Interfaces;
+using SocialMedia.Core.Services;
 using SocialMedia.Infrastructure.Data;
 using SocialMedia.Infrastructure.Repository;
 using System;
@@ -30,7 +31,9 @@ namespace SocialMedia.Api
             //    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             //);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IPostService, PostService>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddDbContext<SocialMediaContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SQLServerConnection")));
             services.AddMvc().AddFluentValidation(opt =>
             {
